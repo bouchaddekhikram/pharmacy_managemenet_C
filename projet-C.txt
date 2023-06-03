@@ -1,0 +1,686 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <stdbool.h>
+
+// structure de produit
+
+typedef struct
+{
+
+    int code; // id de produit
+    char name[50]; // nom de produit
+    float price; // prix de produit
+    float TTC;
+    int quantity; // quantité de produit
+    char *Time_now; // La date d’ajout ou de vente de produit
+
+
+}Product; // nom de structure
+
+int count = 0;
+int boughtCount = 0;
+
+Product products[500];
+
+Product boughtProducts[500];
+
+
+// this function is for adding products to the database
+
+void addProduct()
+{
+
+
+    int TTC;
+
+    /* == Product name == */
+    printf("What is the product name ? :");
+    scanf("%s", products[0].name);
+
+
+    /* == Product id == */
+    printf("What is the product id ? : ");
+    scanf("%d" , &products[0].code);
+
+
+    /* == Product price == */
+    printf("What is the product price ? :");
+    scanf("%f" , &products[0].price);
+
+    products[0].TTC = products[0].price + (products[0].price*0.15);
+
+    /* == Product Qunatity == */
+    printf("What is the product qunatity ? :");
+    scanf("%d", &products[0].quantity );
+    /* == Action Qunatity == */
+    time_t now = time(NULL);
+    products[0].Time_now = ctime(&now);
+
+    /* == message == */
+
+    printf("The product with codeBar : %d has been added!" , products[0].code);
+
+    count++;
+    boughtCount++;
+}
+
+
+
+void AddManyProducts(int num)
+{
+
+    int i , j;
+
+    //Product *products = calloc(num, sizeof(Product)); // set an array using calloc so user could controle the size of it
+
+    for(i = count; i < num+count; i++){
+
+        /*  == products name == */
+        printf("Enter the name of product [%d] : " , i+1); // ask user to type a name
+        scanf("%s" , products[i].name); // push the value the user typed to the var above
+
+        /*  == products id == */
+
+        int id;
+        printf("Enter the id of product [%d] : ", i+1);
+        scanf("%d" , &products[i].code);
+
+        /*  == products price == */
+
+        int price;
+        printf("Please enter the price of product [%d] : " , i+1);
+        scanf("%f", &products[i].price);
+        products[i].TTC = products[i].price + (products[i].price * 0.15);
+
+        /* == products qunatity == */
+
+        int qunatity;
+        printf("Enter the product quantity of product [%d] : ", i+1);
+        scanf("%d", &products[i].quantity );
+
+        /* == time of action == */
+
+        time_t now = time(NULL);
+        products[i].Time_now = ctime(&now);
+        printf("| =================================================================== |\n");
+        printf(" [%s] with codeBar: [%d] hase been added \n with quantity of [%d] and price [%.2f]\n" ,products[i].name, products[i].code,products[i].quantity,products[i].price);
+        printf("| =================================================================== |\n");
+    }
+
+
+    count+=num;
+    boughtCount+=num;
+
+}
+
+/* !== This function is for sortingg products by price ==! */
+
+
+void ListOfProductsByPrice(int num)
+{
+
+    int i,j;
+
+    // Bubble sort
+
+    for(i = 0; i < count; i++){
+
+        for(j = 0; j < count; j++){
+
+            if(products[j].price < products[j+1].price){
+
+                Product temp = products[j];
+                products[j] = products[j+1];
+                products[j+1] = temp;
+
+            }
+
+        }
+
+    }
+
+    // to show the sorted version in screen
+
+    for(i = 0; i < count; i++){
+
+        printf("!== Product N %d ==!\n", i+1);
+        printf("Product name : %s\n" , products[i].name);
+        printf("Product price : %.2f DH   \n" , products[i].price);
+        printf("Product TTC price : %.2f DH\n" , products[i].TTC);
+        printf("Product codeBar :%d\n", products[i].code);
+        printf("Product qunatity : %d\n", products[i].quantity);
+        printf("Time of buying : %s\n", products[i].Time_now);
+
+    }
+
+}
+
+
+/* !== this function is for sorting products by names ==! */
+
+
+void ListOfProductsByName(int num)
+{
+
+    int i,j;
+    // Bubble sort
+    do
+    {
+        i=0;
+
+        for(j = 0; j < count-1; j++){
+
+            if(strcmp(products[j].name, products[j+1].name) >=  0 ){
+
+                Product temp = products[j];
+                products[j] = products[j+1];
+                products[j+1] = temp;
+                i++;
+            }
+
+
+        }
+
+
+
+    }while(i > 0);
+
+
+
+
+    // to show the sorted version in screen
+
+    for(i = 0; i < count; i++){
+
+        printf("!== Product N %d ==!\n", i+1);
+        printf("Product name : %s\n" , products[i].name);
+        printf("Product price : %.2f DH\n" , products[i].price);
+        printf("Product TTC price : %.2f DH\n" , products[i].TTC);
+        printf("Product code :%d\n", products[i].code);
+        printf("Product qunatity : %d\n", products[i].quantity);
+        printf("Time of buying : %s\n", products[i].Time_now);
+
+    }
+
+}
+
+/* !== This function is for searching by code ==! */
+
+void Searching(int n)
+{
+    int codeSearch=0,choice,quantitySearch=0,exit = 3;
+    bool exist=false;
+    int index=0;
+    int i=0;
+
+    printf("Chose a way of searching : \n 1 : Search using codeBar \n 2 : Search using quantity \n Your choice : ");
+    scanf("%d", &choice);
+
+    do{
+
+                if (choice==1) {
+            printf("Enter the code : ");
+            scanf("%d", &codeSearch);
+           // for(int i = 0; i < n; i++){
+
+                    do {
+                             if(products[i].code == codeSearch){
+                                    exist=true;
+                             index=i;
+
+
+
+                }
+                else
+                    i++;
+
+
+                    }while(i<=n && exist==false);
+
+                    if(exist==true){
+                         printf("!== Product with code : %d ==!\n", products[index].code);
+                    printf("Product name : %s\n", products[index].name);
+                    printf("Product price : %.2f DH\n" , products[index].price);
+                    printf("Product quantity : %d\n" , products[index].quantity);
+                    }else
+                     printf("Sorry , this product does not exist ! please try again with different codeBar : \n");
+
+
+           //}
+
+
+                printf("\n- 1 to continue \n- 3 to go back to menu : \n Your choice : ");
+                scanf("%d", &exit);
+            }
+
+
+
+
+
+
+
+
+
+
+            else if(choice==2) {
+
+            printf("Enter the quantity  : ");
+            scanf("%d", &quantitySearch);
+
+
+            /*for(int i = 0; i < n; i++){
+
+                if(products[i].quantity == quantitySearch){
+
+                    printf("!== Product with quantity : %d ==!\n", products[i].quantity);
+                    printf("Product name : %s\n", products[i].name);
+                    printf("Product price : %.2f DH\n" , products[i].price);
+                    printf("Product TTC price : %.2f DH\n" , products[i].TTC);
+                    printf("Proudct code : %d\n" , products[i].code);
+
+
+                }
+                else if (products[i].quantity != quantitySearch) printf("Sorry this product does not exist !!!");
+
+            }*/
+
+             do {
+                             if(products[i].quantity == quantitySearch){
+                                    exist=true;
+                             index=i;
+
+
+
+                }
+                else
+                    i++;
+
+
+                    }while(i<=n && exist==false);
+
+                    if(exist==true){
+                         printf("!== Product with code : %d ==!\n", products[index].code);
+                    printf("Product name : %s\n", products[index].name);
+                    printf("Product price : %.2f DH\n" , products[index].price);
+                    printf("Product quantity : %d\n" , products[index].quantity);
+                    }else
+                     printf("Sorry , this product does not exist ! \n");
+
+                printf("\n- 1 to continue \n- 3 to go back to menu \n Your choice : ");
+                scanf("%d", &exit);
+        }
+
+    } while(exit != 3);
+
+
+}
+// this function is to handle the buying process
+void buy(int n)
+{
+    int codeHolder,quantityHolder,chiox = 1;
+        printf("Product code :");
+        scanf("%d",&codeHolder);
+        printf("Enter quantity : ");
+        scanf("%d", &quantityHolder);
+
+    do
+    {
+
+
+        for(int i = 0; i < boughtCount; i++){
+
+            if(products[i].code == codeHolder){
+
+
+                if(products[i].quantity - quantityHolder >= 0){
+                    printf("Product with code : %d\n", products[i].code);
+                    products[i].quantity = products[i].quantity - quantityHolder;
+                    strcpy(boughtProducts[i].name,products[i].name);
+                    boughtProducts[i].code = products[i].code;
+                    boughtProducts[i].quantity = quantityHolder;
+                    boughtProducts[i].price = products[i].price;
+                    boughtProducts[i].TTC = products[i].TTC;
+                    time_t now = time(NULL);
+                    boughtProducts[i].Time_now = ctime(&now);
+                    printf("Has been bought successfully!\n");
+
+                }else {
+                    printf("Sorry, there no enough quantity of this product!\n");
+                }
+
+                printf("Type 0 to exit the programm or 1 to continue : \n");
+                scanf("%d", &chiox);
+                break;
+        }
+
+
+
+    }
+
+
+    } while (chiox != 0);
+
+
+
+
+}
+
+// this function will show the products with quantity less than 3;
+
+void StockStatus(int num)
+{
+    int i;
+    for(i = 0; i < num; i++){
+
+        if(products[i].quantity < 3){
+
+            printf(" | ==== Products with quantity less than 3 : ===== |\n");
+            printf(" |                         %s                     |\n", products[i].name);
+            printf(" |                                                 |\n");
+            printf(" | ===== ************           ************ ===== |\n");
+
+            printf("The left quantity : %d" , products[i].quantity);
+
+        }else {
+
+            printf("| == This product %s is not with quantity less than 3 == |\n", products[i].name);
+
+        }
+
+    }
+
+}
+// this function is for modifying product quantity
+void modifyQuantityOfProduct(int num)
+{
+
+    int productCode,i,newQuantity;
+
+    printf("Enter the product code : ");
+    scanf("%d", &productCode);
+
+    for(i = 0; i < num; i++){
+
+        if(products[i].code == productCode){
+
+            printf("Enter new quantity : ");
+            scanf("%d", &newQuantity);
+
+            products[i].quantity=newQuantity;
+
+            printf("Congrats ! quantity has been updated ! \n the new quantity : %d" , products[i].quantity);
+
+        }else{
+            printf("The codeBar you've enterd was not correct , please try again!\n");
+        };
+
+    }
+
+}
+
+// delete an element
+
+void deleteElement(int num)
+{
+    int i ,codeHolder,counter;
+    printf("Enter the codeBar of product you wants to delete : ");
+    scanf("%d" , &codeHolder);
+
+    for(i = 0; i < num; i++){
+
+        if(products[i].code == codeHolder){
+
+            products[i] = products[i+1];
+            counter++;
+
+        }
+
+    }
+    count--;
+    if(count != 0){
+        printf("The item was deleted !");
+    }else if(count == 0){
+        printf("There is a problem with deleting this item! please check codeBar");
+    };
+
+
+
+
+}
+
+int SortBoughProductsMax(){
+
+    // Bubble sort
+    int i,j;
+
+    for(i = 0; i < boughtCount; i++ ){
+
+        for(j = 0; j < boughtCount; j++){
+
+            if(boughtProducts[j].price < boughtProducts[j+1].price){
+
+                Product swp = boughtProducts[j];
+                boughtProducts[j] = boughtProducts[j+1];
+                boughtProducts[j+1] = swp;
+
+            }
+
+        }
+
+    }
+
+    return printf("The max price : %.2f DH" , boughtProducts[0].price);
+}
+
+int sortBoughProductsMin(){
+    // Bubble sort
+    int i,j;
+    float min;
+
+    for(i = 0; i < boughtCount; i++ ){
+
+        for(j = 0; j < boughtCount; j++){
+
+            if(boughtProducts[j].price < boughtProducts[j+1].price){
+
+                Product swp = boughtProducts[j];
+                boughtProducts[j] = boughtProducts[j+1];
+                boughtProducts[j+1] = swp;
+
+            }
+
+
+        }
+
+
+    }
+
+    return printf("The min price : %.2f DH\n" , boughtProducts[boughtCount-1].price);
+
+
+}
+// this function will return the average price
+
+int AveragePrice(){}
+/*{
+    int i;
+    float sum=0,average=0,sumOfQuantity=1;
+    for(i =0; i < boughtCount;i++){
+
+        sum+=boughtProducts[i].price;
+        sumOfQuantity = boughtProducts[i].quantity;
+    }
+    average = sum/sumOfQuantity;
+
+    return printf(" Average bought price of bought products : %.2f DT \n %  ", average);
+}*/
+
+
+// this function will hande the statistique options
+
+int StatistiqueOptions(int num)
+{
+    int chiox,i,exit = 1;
+    int Bproducts=0;
+    float sum=0;
+    printf("Wich service you'll like to use ? : \n 1 : Revenue \n 2 : Bought products \n 3 : Avreage bought products \n 4 : max price \n 5 : min price \n Your choice : ");
+    scanf("%d", &chiox);
+
+    do{
+
+        switch(chiox){
+            // if user chosed type 1 then do a simple mathimatical operation and return the total revenue of day
+            case 1:
+                for(i = 0; i < num; i++){
+
+                    sum+=boughtProducts[i].TTC*boughtProducts[i].quantity;
+
+
+                }
+
+                printf(" Day revenue : %.2f DH\n" , sum);
+
+                break;
+            // if user chosed 2 then return that variable wich contains the number of bough products
+            case 2:
+                for(i = 0; i < num; i++){
+
+                    Bproducts+=boughtProducts[i].quantity;
+
+                }
+                printf("The total bough products : %d" , Bproducts);
+
+                break;
+            // if user chosed 3 then return the following :
+            case 3:
+                AveragePrice();
+                break;
+
+            case 4:
+                SortBoughProductsMax();
+                break;
+
+            case 5:
+                sortBoughProductsMin();
+                break;
+
+
+        }
+
+    printf("If you want t exit the programm type : 0  \n Your choice : ");
+    scanf("%d" , &exit);
+    }while(exit != 0);
+
+
+
+}
+
+
+
+// this function is for shwing the menu for users;
+
+void Menu()
+{
+
+    // this var will hold the user choice
+
+    int c,num;
+
+    printf("\n=== Pharmacie menu ===\n- Add new product : press 1 \n- Add many new products : press 2  \n- List of products : press 3\n- Search product : press 4\n- Buy product : press 5\n- Stock status : 6\n- Modify quantity of products : 7\n- delete an element : 8\n- statistique : 9 \nChosen service : ");
+    scanf("%d" , &c);
+
+    if(c != 1 && c != 2 && c != 3 && c != 4 && c != 5 && c != 6 && c != 7 && c != 8 && c != 9){ // if users typed a number else 1 2 3 4 printf the following :
+
+        printf("Sorry, this service isn't avialble");
+
+
+    }else if(c == 1){ // if user type 1 then call the addProduct function
+
+        addProduct();
+
+    }else if(c == 2){ // if user type 2 then call the AddManyProducts() function;
+
+
+        printf("How many products you want to add ? : "); // asking user about how many products he wants to add
+        scanf("%d" , &num);
+
+        AddManyProducts(num);
+
+    }else if(c == 3){ // if user type 2 then call a function to show a list of products
+
+        int chiox;
+
+        //ListOfProducts();
+        printf("!== sort list style !== \n Sort list in a descending order : 1 \n Sort list in an alphabetique order : 2 \n Your choice : ");
+        scanf("%d", &chiox);
+
+        switch (chiox)
+        {
+        case 1:
+            ListOfProductsByPrice(num);
+            break;
+
+        case 2:
+            ListOfProductsByName(num);
+            break;
+
+        default:
+            printf("Please select a service !");
+            break;
+        }
+
+
+    }else if(c == 4){ // if user typed 4 then call the search function
+
+        Searching(num);
+
+    }else if(c == 5){ // if user typed 5 then call the buy() function
+
+       buy(num);
+
+    }else if(c == 6){
+
+        StockStatus(num);
+
+    }else if(c == 7){
+
+        modifyQuantityOfProduct(num);
+
+    }else if(c == 8){
+
+        deleteElement(num);
+
+    }else if(c == 9){
+
+        StatistiqueOptions(boughtCount);
+
+    }else{
+        printf("Are you kidding!");
+    };
+
+
+    };
+
+
+
+
+int main()
+{
+
+    int exit = 1;
+
+    do
+    {
+
+        Menu();
+
+
+    } while (exit == 1);
+        printf("!== If you want to exit type 1 ==! \n !== If you want to continue type 3 !==\n Your choice : ");
+        scanf("%d", &exit);
+
+
+    return 0;
+};
